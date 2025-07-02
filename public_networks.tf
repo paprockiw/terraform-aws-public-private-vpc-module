@@ -1,9 +1,5 @@
 # Public network and related resources
 
-data "aws_availability_zones" "available" {
-  state = "available"
-}
-
 # Public subnets (dynamically generated)
 resource "aws_subnet" "public_subnets" {
   count                   = length(var.public_subnet_cidrs)
@@ -40,5 +36,34 @@ resource "aws_route_table_association" "public_rt_assoc" {
   count          = length(var.public_subnet_cidrs)
   subnet_id      = aws_subnet.public_subnets[count.index].id
   route_table_id = aws_route_table.public_rt.id
+}
+
+
+## Network Address Translation Resources
+# Elastic IPs to attach to NAT Gateway
+resource "aws_eip" "nat" {
+  count      = length(var.private_subnet_cidrs)
+  domain     = "vpc"
+  depends_on = [aws_internet_gateway.igw]
+
+  tags = {
+    Name        = "${var.platform}-${var.environment}-${var.region}-nat-eip-${count.index + 1}"
+    Environment = var.environment
+    Tier        = "nat"
+    built_by    = "terraform"
+  }
+
+}
+
+# NAT Gateway config
+resource "aws_nat_gateway" "nat_gws" {
+  count         = length(var.private_subnet_cidrs)
+  allocation_id = aws_eip.nat[count.index].id
+  subnet_id     = aws_subnet.public_subnets[count.index].id
+  tags = {
+    Name = "${var.platform}-${var.environment}-${var.region}-nat-${count.index + 1}"
+  }
+
+  depends_on = [aws_internet_gateway.igw]
 }
 

@@ -1,5 +1,9 @@
 ## VPC & IGW setup
 
+data "aws_availability_zones" "available" {
+  state = "available"
+}
+
 # VPC 
 resource "aws_vpc" "vpc" {
   cidr_block           = var.vpc_cidr
@@ -20,7 +24,7 @@ resource "aws_internet_gateway" "igw" {
 
   tags = {
     Environment = var.environment
-    Name = "igw-${var.environment}-vpc"
+    Name = "${var.platform}-${var.environment}-vpc-igw"
     built_by = "terraform"
     platform = var.platform
   }
