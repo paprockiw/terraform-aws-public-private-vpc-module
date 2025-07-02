@@ -11,10 +11,10 @@ resource "aws_vpc" "vpc" {
   enable_dns_support   = true
 
   tags = {
+    Built-by    = "terraform"
     Environment = var.environment
-    Name = "${var.platform}-${var.environment}-vpc"
-    built_by = "terraform"
-    platform = var.platform
+    Name        = "${var.platform}-${var.environment}-vpc"
+    Tier        = "public"
   }
 }
 
@@ -23,9 +23,9 @@ resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.vpc.id
 
   tags = {
+    Built-by    = "terraform"
     Environment = var.environment
-    Name = "${var.platform}-${var.environment}-vpc-igw"
-    built_by = "terraform"
-    platform = var.platform
+    Name        = "${var.platform}-${var.environment}-vpc-igw"
+    Tier        = "public"
   }
 }

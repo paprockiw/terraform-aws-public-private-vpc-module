@@ -9,10 +9,10 @@ resource "aws_subnet" "public_subnets" {
   availability_zone       = data.aws_availability_zones.available.names[count.index]
 
   tags = {
+    Built-by    = "terraform"
     Environment = var.environment
     Name        = "${var.platform}-${var.environment}-${var.region}-public-${count.index + 1}"
     Tier        = "public"
-    built_by    = "terraform"
   }
 }
 
@@ -20,7 +20,10 @@ resource "aws_subnet" "public_subnets" {
 resource "aws_route_table" "public_rt" {
   vpc_id = aws_vpc.vpc.id
   tags = {
-    Name = "${var.platform}-${var.environment}-${var.region}-public-rt"
+    Built-by    = "terraform"
+    Environment = var.environment
+    Name        = "${var.platform}-${var.environment}-${var.region}-public-rt"
+    Tier        = "public"
   }
 }
 
@@ -47,12 +50,11 @@ resource "aws_eip" "nat" {
   depends_on = [aws_internet_gateway.igw]
 
   tags = {
-    Name        = "${var.platform}-${var.environment}-${var.region}-nat-eip-${count.index + 1}"
+    Built-by    = "terraform"
     Environment = var.environment
-    Tier        = "nat"
-    built_by    = "terraform"
+    Name        = "${var.platform}-${var.environment}-${var.region}-nat-eip-${count.index + 1}"
+    Tier        = "public"
   }
-
 }
 
 # NAT Gateway config
@@ -61,7 +63,10 @@ resource "aws_nat_gateway" "nat_gws" {
   allocation_id = aws_eip.nat[count.index].id
   subnet_id     = aws_subnet.public_subnets[count.index].id
   tags = {
-    Name = "${var.platform}-${var.environment}-${var.region}-nat-${count.index + 1}"
+    Built-by    = "terraform"
+    Environment = var.environment
+    Name        = "${var.platform}-${var.environment}-${var.region}-nat-${count.index + 1}"
+    Tier        = "public"
   }
 
   depends_on = [aws_internet_gateway.igw]

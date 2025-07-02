@@ -7,8 +7,10 @@ resource "aws_subnet" "private_subnets" {
   availability_zone = data.aws_availability_zones.available.names[count.index]
 
   tags = {
-    Name = "${var.platform}-${var.environment}-${var.region}-private-${count.index + 1}"
-    Tier = "private"
+    Built-by    = "terraform"
+    Environment = var.environment
+    Name        = "${var.platform}-${var.environment}-${var.region}-private-${count.index + 1}"
+    Tier        = "private"
   }
 
   depends_on = [aws_nat_gateway.nat_gws]
@@ -20,7 +22,10 @@ resource "aws_route_table" "private_rts" {
   vpc_id = aws_vpc.vpc.id
 
   tags = {
-    Name = "${var.platform}-${var.environment}-${var.region}-private-rt-${count.index + 1}"
+    Built-by    = "terraform"
+    Environment = var.environment
+    Name        = "${var.platform}-${var.environment}-${var.region}-private-rt-${count.index + 1}"
+    Tier        = "private"
   }
 
   depends_on = [aws_nat_gateway.nat_gws]
@@ -28,10 +33,10 @@ resource "aws_route_table" "private_rts" {
 
 # Generate routes to NAT GW in route tables
 resource "aws_route" "private_nat_gateway_routes" {
-  count                   = length(var.private_subnet_cidrs)
-  route_table_id          = aws_route_table.private_rts[count.index].id
-  destination_cidr_block  = "0.0.0.0/0"
-  nat_gateway_id          = aws_nat_gateway.nat_gws[count.index].id
+  count                  = length(var.private_subnet_cidrs)
+  route_table_id         = aws_route_table.private_rts[count.index].id
+  destination_cidr_block = "0.0.0.0/0"
+  nat_gateway_id         = aws_nat_gateway.nat_gws[count.index].id
 
   depends_on = [aws_nat_gateway.nat_gws]
 }
