@@ -10,6 +10,7 @@ This will build a VPC environment in AWS, including the following resources:
 - Route tables and route associations for each subnet.
 - Tagging for all resources with consistent naming.
 - Flow logs for the VPC. 
+- Common security groups for use on resources in VPC.
 
 ## Table of Contents
 
@@ -63,6 +64,17 @@ module "vpc" {
 | `private_subnet_id_map` | Map of private subnet IDs indexed by number         |
 | `nat_eip_ids`           | List of Elastic IP IDs allocated for NAT Gateways   |
 | `nat_eip_map`           | Map of NAT Gateway EIP public IPs indexed by number |
+
+
+### Security group outputs
+| Output Name                | Description                                                     |
+| -------------------------- | --------------------------------------------------------------- |
+| `sg_public_tls_ingress_id` | ID of SG that allows inbound TLS (HTTPS) to public subnets      |
+| `sg_public_tls_egress_id`  | ID of SG that allows outbound TLS traffic from public subnets   |
+| `sg_priv_http_ingress`     | ID of SG that allows inbound HTTP traffic within private CIDRs  |
+| `sg_priv_http_egress`      | ID of SG that allows outbound HTTP traffic within private CIDRs |
+| `sg_allow_all_traffic`     | ID of SG that allows all ingress and egress traffic             |
+
 
 ---
 
