@@ -5,7 +5,7 @@ data "aws_availability_zones" "available" {
 }
 
 locals {
-  vpc_name =  "${var.platform}-${var.environment}-vpc"
+  vpc_name = "${var.platform}-${var.environment}-vpc"
 }
 
 # VPC 

@@ -2,7 +2,7 @@
 
 resource "aws_security_group" "sg_public_tls_ingress" {
   name        = "public-tls-ingress-sg-${local.vpc_name}"
-  description = "Allow public inbound/outbound TLS traffic"
+  description = "Allow public inbound TLS traffic"
   vpc_id      = aws_vpc.vpc.id
 
   ingress {
@@ -89,7 +89,7 @@ resource "aws_security_group" "sg_priv_http_egress" {
 }
 
 resource "aws_security_group" "sg_allow_all_traffic" {
-  name        = "allow-gall-traffic-sg-${local.vpc_name}"
+  name        = "allow-all-traffic-sg-${local.vpc_name}"
   description = "Allow traffic on all ports to/from resources with this security group."
   vpc_id      = aws_vpc.vpc.id
 
