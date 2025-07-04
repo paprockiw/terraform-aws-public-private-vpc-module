@@ -4,6 +4,10 @@ data "aws_availability_zones" "available" {
   state = "available"
 }
 
+locals {
+  vpc_name =  "${var.platform}-${var.environment}-vpc"
+}
+
 # VPC 
 resource "aws_vpc" "vpc" {
   cidr_block           = var.vpc_cidr
@@ -13,7 +17,7 @@ resource "aws_vpc" "vpc" {
   tags = {
     Built-by    = "terraform"
     Environment = var.environment
-    Name        = "${var.platform}-${var.environment}-vpc"
+    Name        = local.vpc_name
     Tier        = "public"
   }
 }
